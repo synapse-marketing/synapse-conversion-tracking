@@ -1,0 +1,18 @@
+{
+  "slug": "synapse-conversion-tracking",
+  "version": "2.0.0",
+  "package": "https://raw.githubusercontent.com/synapse-marketing/synapse-conversion-tracking/main/updates/synapse-conversion-tracking-2.0.0.zip",
+  "homepage": "https://synapse-marketing.com/",
+  "requires": "5.8",
+  "tested": "6.9",
+  "requires_php": "7.2",
+  "last_updated": "2026-09-21",
+  "package_bytes": 134794,
+  "package_sha256": "fd21da75a6cc34440e29fbca2bf735585ee1ce823ec7a4b88d16694712568860",
+  "signature": "zuJfCSzurpU4z+/PmRJaKYUUyOvou63sXdSq9jjrvGBysYf/E6T1xVuz/P/DINZsXnLJU/uT/EfXA535GxTtDA==",
+  "signed": "ed25519 over sha256(zip) + \"\\n\" + version",
+  "public_key": "GRuGzVdywPtC1a4Ws/2YcPdJwNsjJzbWiuJbIHPVvGo=",
+  "sections": {
+    "description": "<p>Server-side tagging for a self-hosted Google Tag Manager server container.</p>"
+  }
+}

@@ -1,0 +1,63 @@
+<?php
+/**
+ * Assets for admin.
+ *
+ * @package    GTM_Server_Side
+ * @subpackage GTM_Server_Side/includes
+ * @since      2.0.0
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Assets for admin.
+ */
+class GTM_Server_Side_Frontend_Assets {
+	use GTM_Server_Side_Singleton;
+
+	/**
+	 * Init.
+	 *
+	 * @return void
+	 */
+	public function init() {
+		if ( ! GTM_Server_Side_WC_Helpers::instance()->is_enable_ecommerce() ) {
+			return;
+		}
+
+		add_action( 'wp_enqueue_scripts', array( $this, 'wp_enqueue_scripts' ) );
+	}
+
+	/**
+	 * Enqueue scripts
+	 *
+	 * @return void
+	 */
+	public function wp_enqueue_scripts() {
+		wp_enqueue_script( 'gtm-server-side', GTM_SERVER_SIDE_URL . 'assets/js/javascript.js', array( 'jquery' ), GTM_Server_Side_Helpers::get_asset_version( 'assets/js/javascript.js' ), true );
+
+		$scripts = array(
+			'ajax'                         => admin_url( 'admin-ajax.php' ),
+			'security'                     => wp_create_nonce( GTM_SERVER_SIDE_AJAX_SECURITY ),
+			'currency'                     => esc_attr( get_woocommerce_currency() ),
+			'is_custom_event_name'         => GTM_Server_Side_Helpers::get_data_layer_custom_event_name(),
+			'DATA_LAYER_CUSTOM_EVENT_NAME' => GTM_SERVER_SIDE_DATA_LAYER_CUSTOM_EVENT_NAME,
+		);
+
+		// Where the diagnostic pixel goes, and only where there is an edge
+		// worker to receive it. Without this the signals added in 1.7.5 exist
+		// solely on sites running the edge-served sender, because that is the
+		// only mode that loads the tail - so the majority of installations had
+		// no observability at all and a silent failure stayed silent.
+		if ( GTM_Server_Side_Helpers::has_gtm_container_identifier() ) {
+			$prefix                 = wp_parse_url( GTM_Server_Side_Helpers::get_gtm_container_url(), PHP_URL_PATH );
+			$scripts['signal_path'] = is_string( $prefix ) ? rtrim( $prefix, '/' ) : '';
+		}
+
+		if ( GTM_Server_Side_WC_Helpers::instance()->is_enable_user_data() ) {
+			$scripts['user_data'] = GTM_Server_Side_WC_Helpers::instance()->get_data_layer_user_data();
+		}
+
+		wp_localize_script( 'gtm-server-side', 'varGtmServerSide', $scripts );
+	}
+}

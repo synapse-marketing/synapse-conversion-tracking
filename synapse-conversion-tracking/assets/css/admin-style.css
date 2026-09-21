@@ -1,0 +1,23 @@
+#gtm-server-side-admin-settings form h2:not(.hndle) {
+	display: none;
+}
+
+#gtm-server-side-admin-settings .error {
+	color: red;
+	padding-left: 5px;
+}
+
+.tab-disabled {
+	color: #50575e94;
+}
+
+.tab-disabled:hover {
+	color: #50575e94;
+	background: #dcdcde;
+	cursor: not-allowed;
+}
+
+#gtm-server-side-admin-settings:has( #synapse_ct_placement-disable:checked ) .gtm-server-side-gtm-exclude-roles {
+	opacity: 0.4;
+	pointer-events: none;
+}

@@ -1,0 +1,6 @@
+.DS_Store
+node_modules/
+# render outputs and temp dirs
+dev-tools/.render-manifest.json
+# never the private signing key (it lives in ~/.synapse-release, not here)
+*.pem
