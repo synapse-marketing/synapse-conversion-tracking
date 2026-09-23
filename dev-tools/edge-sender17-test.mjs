@@ -24,7 +24,7 @@ import { instrument, runMatrix } from './identity-matrix.mjs';
 
 const dir = path.dirname(fileURLToPath(import.meta.url));
 const plugArg = process.argv.indexOf('--plugin');
-const PLUGIN = path.join(dir, '..', plugArg !== -1 && process.argv[plugArg + 1] ? process.argv[plugArg + 1] : 'synapse-conversion-tracking v2.0.0', 'synapse-conversion-tracking');
+const PLUGIN = path.join(dir, '..', plugArg !== -1 && process.argv[plugArg + 1] ? process.argv[plugArg + 1] : 'synapse-conversion-tracking v2.0.1', 'synapse-conversion-tracking');
 
 // The head is rendered here rather than read from the checked-in fixture, so
 // --plugin switches the head and the sender together. Reading the fixture
@@ -32,7 +32,7 @@ const PLUGIN = path.join(dir, '..', plugArg !== -1 && process.argv[plugArg + 1] 
 // version's tail - which is a real skew scenario, but not the one the suite
 // below is asserting (cfg-encoding-durability.mjs tests that on purpose).
 const rendered = fs.mkdtempSync(path.join(os.tmpdir(), 'syn-boot-'));
-execFileSync(process.execPath, [path.join(dir, 'render-boot.mjs'), '--plugin', plugArg !== -1 && process.argv[plugArg + 1] ? process.argv[plugArg + 1] : 'synapse-conversion-tracking v2.0.0', '--out', rendered], { stdio: 'pipe' });
+execFileSync(process.execPath, [path.join(dir, 'render-boot.mjs'), '--plugin', plugArg !== -1 && process.argv[plugArg + 1] ? process.argv[plugArg + 1] : 'synapse-conversion-tracking v2.0.1', '--out', rendered], { stdio: 'pipe' });
 const boot = fs.readFileSync(path.join(rendered, 'edge-boot17.js'), 'utf8');
 const sentinel = fs.readFileSync(path.join(rendered, 'edge-sentinel17.js'), 'utf8');
 fs.rmSync(rendered, { recursive: true, force: true });
@@ -163,6 +163,8 @@ function makeEnv(opts) {
     byUrl: (u) => scripts.find((s) => norm(s.src) === u || norm(s.src).split('?')[0] === u),
     senderScript: () => api.byUrl(SENDER_URL),
     fallbackScript: () => scripts.find((s) => norm(s.src).indexOf('/wp-content/plugins/') !== -1 && norm(s.src).indexOf('/s.js') !== -1),
+    // 2.0.1: every fallback attempt, in order (the plugin copy, then the same with an hourly "&r=")
+    fallbackScripts: () => scripts.filter((s) => norm(s.src).indexOf('/wp-content/plugins/') !== -1 && norm(s.src).indexOf('/s.js') !== -1),
     tailScript: () => scripts.find((s) => norm(s.src).indexOf('/tail.js') !== -1),
     loaderBooted: () => Array.isArray(w.dataLayer) && w.dataLayer.some((e) => e && e.event === 'gtm.js'),
     containerInjected: () => inserted.some((s) => String(s.src).indexOf('bca96fbh8l.js') !== -1),
@@ -217,6 +219,7 @@ T('E2 edge error -> origin fallback loads, container boots WITH the tail', (env)
   env.senderScript().onerror();
   const fb = env.fallbackScript();
   ok(fb, 'fallback script requested from the plugin folder');
+  ok(/[?&]fb=1(&|$)/.test(norm(fb.src)), 'fallback carries its own marker, never the address the worker fetches (2.0.1)');
   eq(env.loaderBooted(), false, 'container still gated while the fallback loads');
   env.landSender(true);
   fb.onload();
@@ -224,13 +227,33 @@ T('E2 edge error -> origin fallback loads, container boots WITH the tail', (env)
   eq(env.seeded(9), true, 'seed set - the blocked injection is still avoided');
 });
 
-// E3 - both sources fail: boot anyway, unseeded (pre-edge-sender behaviour).
-T('E3 both sources fail -> container boots without the seed', (env) => {
+// E3 - every source fails: boot anyway, unseeded (pre-edge-sender behaviour).
+// 2.0.1: the fallback gets a second, cache-busted try before the page gives up.
+T('E3 all sources fail -> container boots without the seed', (env) => {
   env.run(boot);
   env.senderScript().onerror();
   env.fallbackScript().onerror();
+  eq(env.loaderBooted(), false, 'still gated: the fallback is tried once more');
+  const [, second] = env.fallbackScripts();
+  ok(second, 'second fallback requested');
+  second.onerror();
   eq(env.loaderBooted(), true, 'container booted despite no sender');
   eq(env.seeded(9), false, 'no seed without a sender (Data Tag self-injects)');
+  eq(env.fallbackScripts().length, 2, 'exactly two fallback attempts, never a third');
+});
+
+// E3b - a stored error on the fallback address: the cache-busted retry recovers it.
+T('E3b fallback returns a stored error -> cache-busted retry loads, boots WITH the seed', (env) => {
+  env.run(boot);
+  env.senderScript().onerror();
+  env.fallbackScript().onerror();
+  const [first, second] = env.fallbackScripts();
+  const hour = Math.floor(Date.now() / 36e5);
+  eq(norm(second.src), norm(first.src) + '&r=' + hour, 'retry = the fallback plus an hourly "&r="');
+  env.landSender(true);
+  second.onload();
+  eq(env.loaderBooted(), true, 'container booted after the retry lands');
+  eq(env.seeded(9), true, 'seed set - the blocked injection is avoided after all');
 });
 
 // E4 - hang: the 3s timeout boots the container regardless.
@@ -272,6 +295,8 @@ T('E7 sender loads but defines nothing -> falls back, then boots', (env) => {
   ok(env.fallbackScript(), 'fallback requested when the global is missing');
   eq(env.loaderBooted(), false, 'still gated');
   env.fallbackScript().onload();        // fallback is broken too
+  eq(env.loaderBooted(), false, 'still gated: one cache-busted retry (2.0.1)');
+  env.fallbackScripts()[1].onload();    // and so is the retry
   eq(env.loaderBooted(), true, 'container boots rather than waiting forever');
 });
 

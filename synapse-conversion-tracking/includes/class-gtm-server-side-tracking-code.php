@@ -158,10 +158,12 @@ class GTM_Server_Side_Tracking_Code {
 	 *   - sender loads with its tail  -> everything installed, then boot
 	 *   - sender loads without a tail -> pull assets/tail.js, then boot
 	 *     (an edge worker still serving the pre-1.7.0 core-only build)
-	 *   - sender fails outright       -> retry once from the plugin folder;
-	 *     if that fails too, boot anyway WITHOUT the seed, so the Data Tag
-	 *     falls back to its own (list-blocked) injection - exactly the
-	 *     pre-edge-sender behaviour
+	 *   - sender fails outright       -> retry from the plugin folder (at an
+	 *     address of its own, see EDGE_SENDER_FALLBACK_MARK); if that fails
+	 *     too, once more with an hourly "&r=" cache-buster (2.0.1), so an
+	 *     error stored at the edge or in the browser cannot strand the page;
+	 *     then boot anyway WITHOUT the seed, so the Data Tag falls back to its
+	 *     own (list-blocked) injection - exactly the pre-edge-sender behaviour
 	 * and a 3s timeout boots the container regardless, so nothing on the page
 	 * can ever wait on this. The container is booted exactly once.
 	 *
@@ -182,7 +184,7 @@ class GTM_Server_Side_Tracking_Code {
 			. 'var done=0,alt=0,PR=' . $primary_js . ',FB=' . $fallback_js . ',TL=' . $tail_js . ';'
 			. 'function go(){if(done)return;done=1;boot()}'
 			. 'function ld(u,ok,bad){try{if(!u){bad();return}var s=d.createElement("script");s.async=true;s.src=u;s.onload=ok;s.onerror=bad;var f=d.getElementsByTagName("script")[0];if(f&&f.parentNode){f.parentNode.insertBefore(s,f)}else{(d.head||d.documentElement).appendChild(s)}}catch(x){bad()}}'
-			. 'function ready(){if("function"==typeof w.dataTagSendData){if(w.__synTail){go();return}ld(TL,go,go);return}if(alt){go();return}alt=1;ld(FB,ready,go)}'
+			. 'function ready(){if("function"==typeof w.dataTagSendData){if(w.__synTail){go();return}ld(TL,go,go);return}if(!FB||alt>1){go();return}alt++;ld(alt>1?FB+"&r="+Math.floor(new Date().getTime()/36e5):FB,ready,alt>1?go:ready)}'
 			. 'try{ld(PR,ready,ready);w.setTimeout(go,3000)}catch(x){go()}})(window,document);';
 	}
 

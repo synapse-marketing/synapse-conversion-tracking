@@ -21,5 +21,7 @@ class GTM_Server_Side_Plugin_Deactivate {
 	 * @return void
 	 */
 	public function init() {
+		// 2.0.1: the edge sender health check (GTM_Server_Side_Edge_Health).
+		wp_clear_scheduled_hook( 'synapse_ct_edge_health' );
 	}
 }

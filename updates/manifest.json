@@ -1,18 +1,19 @@
 {
   "slug": "synapse-conversion-tracking",
-  "version": "2.0.0",
-  "package": "https://raw.githubusercontent.com/synapse-marketing/synapse-conversion-tracking/main/updates/synapse-conversion-tracking-2.0.0.zip",
+  "version": "2.0.1",
+  "package": "https://raw.githubusercontent.com/synapse-marketing/synapse-conversion-tracking/main/updates/synapse-conversion-tracking-2.0.1.zip",
   "homepage": "https://synapse-marketing.com/",
   "requires": "5.8",
   "tested": "6.9",
   "requires_php": "7.2",
-  "last_updated": "2026-09-21",
-  "package_bytes": 134794,
-  "package_sha256": "fd21da75a6cc34440e29fbca2bf735585ee1ce823ec7a4b88d16694712568860",
-  "signature": "zuJfCSzurpU4z+/PmRJaKYUUyOvou63sXdSq9jjrvGBysYf/E6T1xVuz/P/DINZsXnLJU/uT/EfXA535GxTtDA==",
+  "last_updated": "2026-09-23",
+  "package_bytes": 140533,
+  "package_sha256": "45c8d86c43d2a8f92e7c704740bf27274a0d3e78dd573ed9b722518787d0e74f",
+  "signature": "pinpb33yrHmeFr2nOjnKwigTnF9r5h8ijzbQ5DY6jQ3SOamBehavEr07JPJT3eRZcUGZOul3WJRPMEGFXByTCw==",
   "signed": "ed25519 over sha256(zip) + \"\\n\" + version",
   "public_key": "GRuGzVdywPtC1a4Ws/2YcPdJwNsjJzbWiuJbIHPVvGo=",
   "sections": {
-    "description": "<p>Server-side tagging for a self-hosted Google Tag Manager server container.</p>"
+    "description": "<p>Server-side tagging for a self-hosted Google Tag Manager server container.</p>",
+    "changelog": "<h4>2.0.1</h4>\n<ul>\n<li>Fixed: the page's fallback copy of the tracking sender now has an address of its own, so an error stored at the edge can no longer break both copies at once. If the fallback fails as well, it is tried once more with an hourly cache-buster before the container boots without it.</li>\n<li>New: the plugin checks its edge-served sender once a day, after every update and in Tools &gt; Site Health, and shows a notice on the Dashboard, Plugins and its settings page while the edge copy is failing. A check that cannot see through Cloudflare says so instead of raising a false alarm.</li>\n</ul>\n"
   }
 }

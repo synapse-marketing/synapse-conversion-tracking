@@ -19,7 +19,7 @@ import { fileURLToPath } from 'node:url';
 
 const dir = path.dirname(fileURLToPath(import.meta.url));
 const arg = (n, d) => { const i = process.argv.indexOf(n); return i !== -1 && process.argv[i + 1] ? process.argv[i + 1] : d; };
-const PLUGIN = path.join(dir, '..', arg('--plugin', 'synapse-conversion-tracking v2.0.0'), 'synapse-conversion-tracking');
+const PLUGIN = path.join(dir, '..', arg('--plugin', 'synapse-conversion-tracking v2.0.1'), 'synapse-conversion-tracking');
 
 const read = (rel) => fs.readFileSync(path.join(PLUGIN, rel), 'utf8');
 const helpers = read('includes/class-gtm-server-side-helpers.php');
@@ -187,9 +187,11 @@ T('C20 the version WordPress installs is the version the manifest names', () => 
 });
 
 T('C21 the version and the minimum WordPress agree with the manifest mechanism', () => {
-  ok(/^\s\*\s*Version:\s*2\.0\.0\s*$/m.test(mainFile), 'header version is not 2.0.0');
+  const hv = /^\s\*\s*Version:\s*(\d+)\.(\d+)\.(\d+)\s*$/m.exec(mainFile);
+  ok(hv, 'header version is not X.Y.Z');
+  ok(Number(hv[1]) >= 2, 'a header version below 2.0.0 cannot update itself');
   ok(/^\s\*\s*Requires at least:\s*5\.8\s*$/m.test(mainFile), 'Update URI needs WordPress 5.8');
-  ok(read('README.txt').includes('Stable tag: 2.0.0'), 'README stable tag');
+  ok(read('README.txt').includes('Stable tag: ' + hv.slice(1, 4).join('.')), 'README stable tag differs from the header version');
 });
 
 T('C22 every download of our package is verified before install, and fails closed', () => {
@@ -218,6 +220,27 @@ T('C24 the signed message binds the version, so an old signed zip cannot be re-l
 T('C25 PHP 7.2 is declared, where sodium arrived', () => {
   ok(/^\s\*\s*Requires PHP:\s*7\.2\s*$/m.test(mainFile), 'header');
   ok(read('README.txt').includes('Requires PHP: 7.2'), 'README');
+});
+
+/* ---------------- 2.0.1: the edge sender can no longer fail silently ---------------- */
+
+T('C26 the fallback copy never shares an address with what the worker fetches', () => {
+  ok(/const EDGE_SENDER_FALLBACK_MARK = 'fb=1';/.test(helpers), 'marker constant');
+  const body = /function get_edge_sender_fallback_url\(\)[\s\S]*?\n\t\}/.exec(helpers)[0];
+  ok(body.includes('self::EDGE_SENDER_FALLBACK_MARK'), 'the fallback URL does not carry the marker');
+  const code = read('includes/class-gtm-server-side-tracking-code.php');
+  ok(code.includes('"&r="+Math.floor(new Date().getTime()/36e5)'), 'no hourly cache-busted retry in the boot');
+});
+
+T('C27 the edge health check is wired, scoped, and never cries wolf', () => {
+  ok(/add_action\(\s*'synapse_ct',\s*array\(\s*GTM_Server_Side_Edge_Health::class,\s*'instance'\s*\)\s*\);/.test(mainFile), 'not registered on synapse_ct');
+  const h = read('includes/class-gtm-server-side-edge-health.php');
+  ok(h.includes("const CRON_HOOK = 'synapse_ct_edge_health';"), 'cron hook name');
+  ok(read('includes/class-gtm-server-side-plugin-deactivate.php').includes("wp_clear_scheduled_hook( 'synapse_ct_edge_health' )"), 'cron not cleared on deactivation');
+  ok(h.includes('! is_admin() && ! wp_doing_cron()'), 'scheduling runs on page views');
+  ok(h.includes("'cf-ray'") && h.includes("'cf-mitigated'"), 'an answer that bypassed Cloudflare, or a challenge, would count as a failure');
+  ok(/substr\(\s*hash\(\s*'sha256',\s*\$body\s*\),\s*0,\s*8\s*\)\s*===\s*\$want/.test(h), 'the version is not verified');
+  ok(h.includes("'dashboard', 'plugins', 'settings_page_' . GTM_SERVER_SIDE_ADMIN_SLUG"), 'notice screens');
 });
 
 console.log(`\n${pass}/${pass + fail} passed\n`);

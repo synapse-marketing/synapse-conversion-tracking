@@ -17,7 +17,7 @@ const dir = path.dirname(fileURLToPath(import.meta.url));
 const argIdx = process.argv.indexOf('--plugin');
 const PLUGIN_DIR = argIdx !== -1 && process.argv[argIdx + 1]
   ? process.argv[argIdx + 1]
-  : 'synapse-conversion-tracking v2.0.0';
+  : 'synapse-conversion-tracking v2.0.1';
 const SCRIPT = path.join(dir, '..', PLUGIN_DIR, 'synapse-conversion-tracking', 'assets', 'js', 'javascript.js');
 
 let pass = 0, fail = 0;

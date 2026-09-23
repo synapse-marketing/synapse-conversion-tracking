@@ -8,7 +8,7 @@
  * @wordpress-plugin
  * Plugin Name:       Synapse Conversion Tracking
  * Description:       Server-side tagging for a self-hosted Google Tag Manager server container: embeds the web GTM snippet with a custom first-party loader, optional enhanced ad-blocker protection, GA4 measurement recovery and Data Client transport rescue for hostile browser privacy modes, configures WooCommerce data layer events, and restores lost ad click IDs.
- * Version:           2.0.0
+ * Version:           2.0.1
  * Requires at least: 5.8
  * Requires PHP:      7.2
  * Update URI:        https://raw.githubusercontent.com/synapse-marketing/synapse-conversion-tracking/main/updates/manifest.json
@@ -35,6 +35,9 @@ add_action( 'synapse_ct', array( GTM_Server_Side_Plugin_Update::class, 'instance
 add_action( 'synapse_ct', array( GTM_Server_Side_I18n::class, 'instance' ) );
 add_action( 'synapse_ct', array( GTM_Server_Side_WC_Order::class, 'instance' ) );
 add_action( 'synapse_ct', array( GTM_Server_Side_Frontend_Ajax::class, 'instance' ) );
+// Edge sender health: a WP-Cron check (so on the always-hook, like the updater)
+// plus a Site Health test and an admin notice when the edge copy is failing.
+add_action( 'synapse_ct', array( GTM_Server_Side_Edge_Health::class, 'instance' ) );
 add_action( 'synapse_ct_admin', array( GTM_Server_Side_Admin_Settings::class, 'instance' ) );
 add_action( 'synapse_ct_admin', array( GTM_Server_Side_Admin_Assets::class, 'instance' ) );
 add_action( 'synapse_ct_frontend', array( GTM_Server_Side_Frontend_Assets::class, 'instance' ) );

@@ -3,7 +3,7 @@ Contributors: synapse
 Tags: google tag manager, server-side tagging, sgtm, woocommerce, data layer
 Requires at least: 5.8
 Tested up to: 6.9
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 Requires PHP: 7.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -38,6 +38,29 @@ service integrations were removed; loader serving is delegated to your own
 edge infrastructure.
 
 == Changelog ==
+
+= 2.0.1 =
+* Fixed: a single refusal from the site could break the edge-served sender for
+  a year. The edge worker fetches the sender from the plugin folder and, before
+  this release, the page's own fallback asked for the very same address. A
+  worker that stored an error under that address (a firewall, a security
+  plugin or an origin lock refusing the worker once was enough, and the worker
+  published before 23 September 2026 kept any answer for a year) handed the
+  same error to the fallback, and both copies failed together. The fallback now
+  carries its own marker ("&fb=1") and can never share a cache entry with the
+  worker. If the fallback fails as well, the page tries once more with an
+  hourly cache-buster, so no stored error, at the edge or in the browser, can
+  strand it. The container still boots in every case, within 3 seconds.
+* New: the plugin checks its edge-served sender. Once a day, shortly after
+  every update, and whenever Tools > Site Health is opened, it asks the edge
+  address for the sender, the same way a browser does, and confirms that the
+  answer is the sender, that it matches the version the page asks for, and
+  that it came through Cloudflare. A failure shows a notice on the Dashboard,
+  on Plugins and on the plugin's settings page, and a critical item in Site
+  Health, with the address and what came back. A check that cannot reach the
+  site through Cloudflare (a host that resolves its own domain locally, a
+  challenge page, a blocked loopback) says so instead of raising a false
+  alarm. Nothing is checked unless the edge-served sender is switched on.
 
 = 2.0.0 =
 * New: the plugin updates itself through WordPress. It carries an "Update URI"

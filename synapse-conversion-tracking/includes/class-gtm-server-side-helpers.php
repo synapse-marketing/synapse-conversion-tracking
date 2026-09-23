@@ -22,6 +22,20 @@ class GTM_Server_Side_Helpers {
 	const EDGE_SENDER_GUESSED_BASE = '/wp-content/plugins/synapse-conversion-tracking/assets/';
 
 	/**
+	 * Marker on the browser's fallback copy of the sender (2.0.1).
+	 *
+	 * The edge worker fetches the sender from the plugin folder at
+	 * "assets/s.js?v=<hash>". Before 2.0.1 the page's fallback asked for that
+	 * exact address, so an error the worker had stored there (the worker
+	 * published before 2026-09-23 kept ANY answer for a year) was also what the
+	 * fallback got, and both copies failed together. With this marker the two
+	 * can never share a cache entry. dev-tools/render-boot.mjs reads it from here.
+	 *
+	 * @var string
+	 */
+	const EDGE_SENDER_FALLBACK_MARK = 'fb=1';
+
+	/**
 	 * Enable or disable data layer ecommerce.
 	 *
 	 * @var bool
@@ -501,6 +515,9 @@ class GTM_Server_Side_Helpers {
 	 * decorative one - the file is byte-identical, only slower and uncached at
 	 * the edge.
 	 *
+	 * Carries EDGE_SENDER_FALLBACK_MARK after the version, so it is never the
+	 * address the worker itself fetches (see the constant).
+	 *
 	 * @return string
 	 */
 	public static function get_edge_sender_fallback_url() {
@@ -509,7 +526,9 @@ class GTM_Server_Side_Helpers {
 			return '';
 		}
 
-		return GTM_SERVER_SIDE_URL . $file . self::get_asset_version_query( $file );
+		$query = self::get_asset_version_query( $file );
+
+		return GTM_SERVER_SIDE_URL . $file . $query . ( '' === $query ? '?' : '&' ) . self::EDGE_SENDER_FALLBACK_MARK;
 	}
 
 	/**

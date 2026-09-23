@@ -26,7 +26,7 @@ const arg = (name, fallback) => {
   const i = process.argv.indexOf(name);
   return i !== -1 && process.argv[i + 1] ? process.argv[i + 1] : fallback;
 };
-const PLUGIN = path.join(dir, '..', arg('--plugin', 'synapse-conversion-tracking v2.0.0'), 'synapse-conversion-tracking');
+const PLUGIN = path.join(dir, '..', arg('--plugin', 'synapse-conversion-tracking v2.0.1'), 'synapse-conversion-tracking');
 const OUT_DIR = arg('--out', dir);
 const PHP = fs.readFileSync(path.join(PLUGIN, 'includes', 'class-gtm-server-side-tracking-code.php'), 'utf8');
 
@@ -179,10 +179,19 @@ function renderCfg() {
   }
 }
 
+// 2.0.1: the fallback carries EDGE_SENDER_FALLBACK_MARK so it never shares a
+// cache entry with the address the worker fetches. Read it from the plugin;
+// a release without the constant renders the old, unmarked address.
+const FALLBACK_MARK = (() => {
+  const php = fs.readFileSync(path.join(PLUGIN, 'includes', 'class-gtm-server-side-helpers.php'), 'utf8');
+  const m = /const EDGE_SENDER_FALLBACK_MARK = '([^']+)'/.exec(php);
+  return m ? '&' + m[1] : '';
+})();
+
 const env = {
   '$loader': LOADER,
   '$primary_js': wpJson(SITE + PREFIX + '/s.js?v=' + sha8('s.js')),
-  '$fallback_js': wpJson(PLUGIN_URL + 'assets/s.js?v=' + sha8('s.js')),
+  '$fallback_js': wpJson(PLUGIN_URL + 'assets/s.js?v=' + sha8('s.js') + FALLBACK_MARK),
   '$tail_js': wpJson(PLUGIN_URL + 'assets/tail.js?v=' + sha8('tail.js')),
   '$this->get_synapse_cfg_js()': renderCfg(),
 };

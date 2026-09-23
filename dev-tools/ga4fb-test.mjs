@@ -13,7 +13,7 @@ const dir = path.dirname(fileURLToPath(import.meta.url));
 const __pluginIdx = process.argv.indexOf('--plugin');
 const PLUGIN_DIR = __pluginIdx !== -1 && process.argv[__pluginIdx + 1]
   ? process.argv[__pluginIdx + 1]
-  : 'synapse-conversion-tracking v2.0.0';
+  : 'synapse-conversion-tracking v2.0.1';
 const __fresh = requireFresh(PLUGIN_DIR, path.basename(fileURLToPath(import.meta.url)));
 const combinedOn = fs.readFileSync(path.join(dir, 'combined-shim-on.js'), 'utf8');
 const combinedOff = fs.readFileSync(path.join(dir, 'combined-shim-off.js'), 'utf8');
