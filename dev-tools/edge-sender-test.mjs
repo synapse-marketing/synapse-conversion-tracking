@@ -24,7 +24,7 @@ const dir = path.dirname(fileURLToPath(import.meta.url));
 const __pluginIdx = process.argv.indexOf('--plugin');
 const PLUGIN_DIR = __pluginIdx !== -1 && process.argv[__pluginIdx + 1]
   ? process.argv[__pluginIdx + 1]
-  : 'synapse-conversion-tracking v2.0.2';
+  : 'synapse-conversion-tracking v2.0.3';
 const __fresh = requireFresh(PLUGIN_DIR, path.basename(fileURLToPath(import.meta.url)));
 const boot = fs.readFileSync(path.join(dir, 'edge-boot.js'), 'utf8');
 const rescueOnly = fs.readFileSync(path.join(dir, 'edge-rescue.js'), 'utf8');

@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 
 const dir = path.dirname(fileURLToPath(import.meta.url));
 const argIdx = process.argv.indexOf('--plugin');
-const PLUGIN_DIR = argIdx !== -1 && process.argv[argIdx + 1] ? process.argv[argIdx + 1] : 'synapse-conversion-tracking v2.0.2';
+const PLUGIN_DIR = argIdx !== -1 && process.argv[argIdx + 1] ? process.argv[argIdx + 1] : 'synapse-conversion-tracking v2.0.3';
 
 // Rendered fresh from the PHP on every run by render-boot.mjs, into a temp
 // directory - so there is no snapshot in the repo that can drift away from the

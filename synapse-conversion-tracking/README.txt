@@ -3,7 +3,7 @@ Contributors: synapse
 Tags: google tag manager, server-side tagging, sgtm, woocommerce, data layer
 Requires at least: 5.8
 Tested up to: 6.9
-Stable tag: 2.0.2
+Stable tag: 2.0.3
 Requires PHP: 7.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -38,6 +38,11 @@ service integrations were removed; loader serving is delegated to your own
 edge infrastructure.
 
 == Changelog ==
+
+= 2.0.3 =
+* Settings page: the descriptions under each setting are darker and easier
+  to read, and the three placement options use the same square tick boxes
+  as the rest of the page. They still allow only one choice.
 
 = 2.0.2 =
 * New look for the settings page, in the Synapse design: the Synapse logo

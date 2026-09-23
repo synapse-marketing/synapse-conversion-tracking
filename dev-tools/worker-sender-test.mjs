@@ -18,7 +18,7 @@ import { fileURLToPath } from 'node:url';
 
 const dir = path.dirname(fileURLToPath(import.meta.url));
 const plugArg = process.argv.indexOf('--plugin');
-const PLUGIN = path.join(dir, '..', plugArg !== -1 && process.argv[plugArg + 1] ? process.argv[plugArg + 1] : 'synapse-conversion-tracking v2.0.2', 'synapse-conversion-tracking');
+const PLUGIN = path.join(dir, '..', plugArg !== -1 && process.argv[plugArg + 1] ? process.argv[plugArg + 1] : 'synapse-conversion-tracking v2.0.3', 'synapse-conversion-tracking');
 // Defaults to the commented release file. Pass a filename to run the identical
 // suite against a variant - the comment-stripped BARE build has to pass every
 // one of these before it may be pasted into Cloudflare:

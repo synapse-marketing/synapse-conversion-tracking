@@ -91,7 +91,7 @@ export function requireFresh(pluginDir, suite) {
 const isMain = process.argv[1] && path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url));
 if (isMain) {
   const i = process.argv.indexOf('--plugin');
-  const plugin = i !== -1 && process.argv[i + 1] ? process.argv[i + 1] : 'synapse-conversion-tracking v2.0.2';
+  const plugin = i !== -1 && process.argv[i + 1] ? process.argv[i + 1] : 'synapse-conversion-tracking v2.0.3';
   if (process.argv.includes('--stamp')) {
     const fp = fingerprint(plugin);
     fs.writeFileSync(MANIFEST, JSON.stringify({

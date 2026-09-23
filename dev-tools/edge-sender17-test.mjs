@@ -24,7 +24,7 @@ import { instrument, runMatrix } from './identity-matrix.mjs';
 
 const dir = path.dirname(fileURLToPath(import.meta.url));
 const plugArg = process.argv.indexOf('--plugin');
-const PLUGIN = path.join(dir, '..', plugArg !== -1 && process.argv[plugArg + 1] ? process.argv[plugArg + 1] : 'synapse-conversion-tracking v2.0.2', 'synapse-conversion-tracking');
+const PLUGIN = path.join(dir, '..', plugArg !== -1 && process.argv[plugArg + 1] ? process.argv[plugArg + 1] : 'synapse-conversion-tracking v2.0.3', 'synapse-conversion-tracking');
 
 // The head is rendered here rather than read from the checked-in fixture, so
 // --plugin switches the head and the sender together. Reading the fixture
@@ -32,7 +32,7 @@ const PLUGIN = path.join(dir, '..', plugArg !== -1 && process.argv[plugArg + 1] 
 // version's tail - which is a real skew scenario, but not the one the suite
 // below is asserting (cfg-encoding-durability.mjs tests that on purpose).
 const rendered = fs.mkdtempSync(path.join(os.tmpdir(), 'syn-boot-'));
-execFileSync(process.execPath, [path.join(dir, 'render-boot.mjs'), '--plugin', plugArg !== -1 && process.argv[plugArg + 1] ? process.argv[plugArg + 1] : 'synapse-conversion-tracking v2.0.2', '--out', rendered], { stdio: 'pipe' });
+execFileSync(process.execPath, [path.join(dir, 'render-boot.mjs'), '--plugin', plugArg !== -1 && process.argv[plugArg + 1] ? process.argv[plugArg + 1] : 'synapse-conversion-tracking v2.0.3', '--out', rendered], { stdio: 'pipe' });
 const boot = fs.readFileSync(path.join(rendered, 'edge-boot17.js'), 'utf8');
 const sentinel = fs.readFileSync(path.join(rendered, 'edge-sentinel17.js'), 'utf8');
 fs.rmSync(rendered, { recursive: true, force: true });

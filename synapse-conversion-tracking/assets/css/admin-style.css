@@ -161,7 +161,7 @@
 	font-weight: 400;
 	line-height: 1.55;
 	letter-spacing: -0.05px;
-	color: var(--sct-ink-muted);
+	color: var(--sct-ink-soft);
 }
 
 /* The row's label lines up with the middle of a text field. */
@@ -241,15 +241,10 @@
 	transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
-#gtm-server-side-admin-settings input[type="radio"] { border-radius: 50%; }
-
-#gtm-server-side-admin-settings input[type="checkbox"]:checked {
-	background: var(--sct-ink) var(--sct-check) center / 12px no-repeat;
-	border-color: var(--sct-ink);
-}
-
+/* The placement options are radios (one choice) drawn like the tick boxes. */
+#gtm-server-side-admin-settings input[type="checkbox"]:checked,
 #gtm-server-side-admin-settings input[type="radio"]:checked {
-	background: radial-gradient(circle, #fff 0 3.5px, var(--sct-ink) 4px);
+	background: var(--sct-ink) var(--sct-check) center / 12px no-repeat;
 	border-color: var(--sct-ink);
 }
 

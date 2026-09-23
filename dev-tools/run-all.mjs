@@ -17,7 +17,7 @@ const dir = path.dirname(fileURLToPath(import.meta.url));
 const arg = (n, d) => { const i = process.argv.indexOf(n); return i !== -1 && process.argv[i + 1] ? process.argv[i + 1] : d; };
 // In the release checkout the plugin sits in a versioned folder next to
 // dev-tools; in the git repository it sits directly at ./synapse-conversion-tracking.
-const versioned = 'synapse-conversion-tracking v2.0.2';
+const versioned = 'synapse-conversion-tracking v2.0.3';
 const PLUGIN = arg('--plugin', fs.existsSync(path.join(dir, '..', versioned)) ? versioned : '.');
 
 // Suites that read the plugin source directly. These are the ones whose green

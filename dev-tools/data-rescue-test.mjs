@@ -19,7 +19,7 @@ const dir = path.dirname(fileURLToPath(import.meta.url));
 const __pluginIdx = process.argv.indexOf('--plugin');
 const PLUGIN_DIR = __pluginIdx !== -1 && process.argv[__pluginIdx + 1]
   ? process.argv[__pluginIdx + 1]
-  : 'synapse-conversion-tracking v2.0.2';
+  : 'synapse-conversion-tracking v2.0.3';
 const __fresh = requireFresh(PLUGIN_DIR, path.basename(fileURLToPath(import.meta.url)));
 const rescueOnly = fs.readFileSync(path.join(dir, 'rescue-only.js'), 'utf8');
 const combinedV16 = fs.readFileSync(path.join(dir, 'combined-v16.js'), 'utf8');
