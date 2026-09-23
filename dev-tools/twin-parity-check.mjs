@@ -22,7 +22,7 @@ import { instrument, runMatrix } from './identity-matrix.mjs';
 
 const dir = path.dirname(fileURLToPath(import.meta.url));
 const arg = (n, d) => { const i = process.argv.indexOf(n); return i !== -1 && process.argv[i + 1] ? process.argv[i + 1] : d; };
-const PLUGIN = path.join(dir, '..', arg('--plugin', 'synapse-conversion-tracking v2.0.1'), 'synapse-conversion-tracking');
+const PLUGIN = path.join(dir, '..', arg('--plugin', 'synapse-conversion-tracking v2.0.2'), 'synapse-conversion-tracking');
 
 const php = fs.readFileSync(path.join(PLUGIN, 'includes', 'class-gtm-server-side-tracking-code.php'), 'utf8');
 const tail = fs.readFileSync(path.join(PLUGIN, 'assets', 'tail.js'), 'utf8');

@@ -30,7 +30,7 @@ const dir = path.dirname(fileURLToPath(import.meta.url));
 const __pluginIdx = process.argv.indexOf('--plugin');
 const NEW = __pluginIdx !== -1 && process.argv[__pluginIdx + 1]
   ? process.argv[__pluginIdx + 1]
-  : 'synapse-conversion-tracking v2.0.1';
+  : 'synapse-conversion-tracking v2.0.2';
 const OLD = 'synapse-conversion-tracking v1.7.1';
 const plug = (v) => path.join(dir, '..', v, 'synapse-conversion-tracking');
 

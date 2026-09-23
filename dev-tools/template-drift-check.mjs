@@ -27,7 +27,7 @@ import { fileURLToPath } from 'node:url';
 
 const dir = path.dirname(fileURLToPath(import.meta.url));
 const plugArg = process.argv.indexOf('--plugin');
-const PLUGIN = path.join(dir, '..', plugArg !== -1 && process.argv[plugArg + 1] ? process.argv[plugArg + 1] : 'synapse-conversion-tracking v2.0.1', 'synapse-conversion-tracking');
+const PLUGIN = path.join(dir, '..', plugArg !== -1 && process.argv[plugArg + 1] ? process.argv[plugArg + 1] : 'synapse-conversion-tracking v2.0.2', 'synapse-conversion-tracking');
 // dev-tools -> synapse-conversion-tracking -> sGTM Configuration -> claude
 const TEMPLATE = path.join(dir, '..', '..', '..', 'stape gtm templates', 'data-tag-main', 'template.js');
 

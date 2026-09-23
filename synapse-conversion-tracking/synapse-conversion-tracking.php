@@ -8,7 +8,7 @@
  * @wordpress-plugin
  * Plugin Name:       Synapse Conversion Tracking
  * Description:       Server-side tagging for a self-hosted Google Tag Manager server container: embeds the web GTM snippet with a custom first-party loader, optional enhanced ad-blocker protection, GA4 measurement recovery and Data Client transport rescue for hostile browser privacy modes, configures WooCommerce data layer events, and restores lost ad click IDs.
- * Version:           2.0.1
+ * Version:           2.0.2
  * Requires at least: 5.8
  * Requires PHP:      7.2
  * Update URI:        https://raw.githubusercontent.com/synapse-marketing/synapse-conversion-tracking/main/updates/manifest.json

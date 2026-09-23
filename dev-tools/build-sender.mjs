@@ -27,7 +27,7 @@ import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
 const dir = path.dirname(fileURLToPath(import.meta.url));
-const PLUGIN_DIR = 'synapse-conversion-tracking v2.0.1';
+const PLUGIN_DIR = 'synapse-conversion-tracking v2.0.2';
 const argIdx = process.argv.indexOf('--plugin');
 const version = argIdx !== -1 && process.argv[argIdx + 1] ? process.argv[argIdx + 1] : PLUGIN_DIR;
 const PLUGIN = path.join(dir, '..', version, 'synapse-conversion-tracking');

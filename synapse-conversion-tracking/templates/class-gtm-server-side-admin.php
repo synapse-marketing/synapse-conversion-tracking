@@ -14,7 +14,7 @@ $tab = GTM_Server_Side_Admin_Settings::get_settings_tab(); // phpcs:ignore WordP
 ?>
 
 <div id="gtm-server-side-admin-settings" class="wrap">
-	<h2><?php esc_html_e( 'Synapse Conversion Tracking options', 'gtm-server-side' ); ?></h2>
+	<h2><?php esc_html_e( 'Synapse Conversion Tracking', 'gtm-server-side' ); ?></h2>
 
 	<div class="nav-tab-wrapper wp-clearfix">
 		<a href="<?php echo esc_url( remove_query_arg( 'tab' ) ); ?>" class="nav-tab<?php echo 'general' === $tab ? ' nav-tab-active' : ''; ?>">

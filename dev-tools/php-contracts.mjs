@@ -19,7 +19,7 @@ import { fileURLToPath } from 'node:url';
 
 const dir = path.dirname(fileURLToPath(import.meta.url));
 const arg = (n, d) => { const i = process.argv.indexOf(n); return i !== -1 && process.argv[i + 1] ? process.argv[i + 1] : d; };
-const PLUGIN = path.join(dir, '..', arg('--plugin', 'synapse-conversion-tracking v2.0.1'), 'synapse-conversion-tracking');
+const PLUGIN = path.join(dir, '..', arg('--plugin', 'synapse-conversion-tracking v2.0.2'), 'synapse-conversion-tracking');
 
 const read = (rel) => fs.readFileSync(path.join(PLUGIN, rel), 'utf8');
 const helpers = read('includes/class-gtm-server-side-helpers.php');

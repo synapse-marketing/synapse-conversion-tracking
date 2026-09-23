@@ -3,7 +3,7 @@ Contributors: synapse
 Tags: google tag manager, server-side tagging, sgtm, woocommerce, data layer
 Requires at least: 5.8
 Tested up to: 6.9
-Stable tag: 2.0.1
+Stable tag: 2.0.2
 Requires PHP: 7.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -38,6 +38,14 @@ service integrations were removed; loader serving is delegated to your own
 edge infrastructure.
 
 == Changelog ==
+
+= 2.0.2 =
+* New look for the settings page, in the Synapse design: the Synapse logo
+  next to the title, the tabs as a centred switch, each setting on its own
+  row with its control beside it, and the Save button always in reach at the
+  bottom. The page uses the full width of the screen. The settings, their
+  descriptions and how they work are unchanged.
+* The settings page title is now "Synapse Conversion Tracking".
 
 = 2.0.1 =
 * Fixed: a single refusal from the site could break the edge-served sender for

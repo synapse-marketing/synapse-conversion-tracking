@@ -1,23 +1,516 @@
-#gtm-server-side-admin-settings form h2:not(.hndle) {
-	display: none;
+/* Synapse Conversion Tracking: settings page.
+   Same design system as Synapse Cookie Banner 2.5.0 (and synapse-marketing.com):
+   Inter, ink/parchment surfaces, hairlines, 12px inputs and buttons, 18px card,
+   one red accent, focus = white field with a solid grey frame (never a glow).
+   Visual only: the markup, texts and behaviour of the page are untouched, every
+   rule is scoped to #gtm-server-side-admin-settings and specific enough to beat
+   WordPress core forms.css / common.css / buttons.css. */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+#gtm-server-side-admin-settings {
+	--sct-accent: #c4232b;
+	--sct-accent-press: #ad1f26;
+	--sct-ink: #1d1d1f;
+	--sct-ink-soft: #424245;
+	--sct-ink-muted: #6e6e73;
+	--sct-canvas: #ffffff;
+	--sct-parchment: #f5f5f7;
+	--sct-hairline: rgba(0, 0, 0, 0.09);
+	--sct-line-strong: rgba(0, 0, 0, 0.22);
+	--sct-focus: #86868b;
+	--sct-r-card: 18px;
+	--sct-r-input: 12px;
+	--sct-font: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", system-ui, sans-serif;
+	--sct-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+	--sct-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M2.8 7.4l2.9 2.9 5.5-6'/%3E%3C/svg%3E");
+
+	box-sizing: border-box;
+	max-width: none;
+	margin: 16px 20px 0 2px;
+	padding: 20px 24px 0;
+	background: var(--sct-canvas);
+	border: 1px solid var(--sct-hairline);
+	border-radius: var(--sct-r-card);
+	color: var(--sct-ink);
+	font-family: var(--sct-font);
+	font-size: 13px;
+	letter-spacing: -0.1px;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
 }
 
-#gtm-server-side-admin-settings .error {
-	color: red;
-	padding-left: 5px;
+#gtm-server-side-admin-settings * { box-sizing: border-box; }
+
+/* ---- Header: the Synapse logo and the page title, like the cookie banner ---- */
+#gtm-server-side-admin-settings > h2 {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin: 0 0 18px;
+	padding: 0 0 18px;
+	border-bottom: 1px solid var(--sct-hairline);
+	font-family: inherit;
+	font-size: 17px;
+	font-weight: 600;
+	line-height: 1.2;
+	letter-spacing: -0.3px;
+	color: var(--sct-ink);
 }
 
-.tab-disabled {
-	color: #50575e94;
+#gtm-server-side-admin-settings > h2::before {
+	content: "";
+	flex: none;
+	width: 40px;
+	height: 40px;
+	/* The Synapse logo (synapse-header-mark.svg). */
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 420 420'%3E%3Cpath fill='%23333333' d='M152.7952,286.1735c7.3683,25.3412,31.017,43.0157,57.4537,43.0157,33.0583,0,59.8934-26.8351,59.8934-59.8436,0-19.9147-33.1581-33.1082-65.2206-45.9034-39.5804-15.7324-84.3884-33.5561-84.3884-73.9828,0-49.4879,40.2277-89.7153,89.7156-89.7153,39.6303,0,75.0784,26.536,86.1807,64.5232,1.7427,6.0243,7.5677,10.256,14.1396,10.256h51.4501c21.1917,0,34.2599-23.6746,22.4505-41.2706C346.7547,37.0571,282.6341,0,210,0,94.1962,0,0,94.1963,0,209.9502c0,6.7794.3254,13.4897.9585,20.1134,1.3172,13.7802,12.8163,24.3461,26.6594,24.346h82.3111c19.7652,0,37.3895,13.0441,42.8663,31.7639Z'/%3E%3Cpath fill='%23333333' d='M418.8345,187.838c-1.4176-13.4183-13.0433-23.4428-26.5363-23.4428h-81.7292c-19.7655,0-37.34-13.044-42.8167-31.7639-7.4182-25.3412-31.0668-43.0154-57.5035-43.0154-33.0085,0-59.8436,26.8348-59.8436,59.8434,0,20.1635,33.3073,33.4069,65.5194,46.2519,39.4309,15.6826,84.0897,33.4565,84.0897,73.6343,0,49.4879-40.2775,89.7156-89.7654,89.7156-39.63,0-75.0285-26.5363-86.1309-64.5236-1.7922-6.0738-7.6175-10.256-14.1891-10.256h-52.6976c-21.1812,0-34.1659,23.5974-22.4778,41.2618,39.3242,59.4321,108.0438,97.7937,185.3073,94.1705,102.2246-4.7937,187.068-84.2466,198.59-185.9328,1.7757-15.6716,1.7591-31.0328.1838-45.9431Z'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 
-.tab-disabled:hover {
-	color: #50575e94;
-	background: #dcdcde;
+/* ---- Tabs: the segmented control of the cookie banner, centred on the card ---- */
+#gtm-server-side-admin-settings .nav-tab-wrapper {
+	display: flex;
+	width: fit-content;
+	gap: 4px;
+	margin: 0 auto;
+	padding: 4px;
+	background: var(--sct-parchment);
+	border: 1px solid var(--sct-hairline);
+	border-radius: var(--sct-r-input);
+}
+
+#gtm-server-side-admin-settings .nav-tab-wrapper::before,
+#gtm-server-side-admin-settings .nav-tab-wrapper::after { display: none; }
+
+#gtm-server-side-admin-settings .nav-tab {
+	float: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 36px;
+	margin: 0;
+	padding: 0 20px;
+	border: 1px solid transparent;
+	border-radius: 9px;
+	background: transparent;
+	color: var(--sct-ink-muted);
+	font-family: inherit;
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 1;
+	letter-spacing: -0.1px;
+	white-space: nowrap;
+	text-decoration: none;
+	box-shadow: none;
+	transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+#gtm-server-side-admin-settings .nav-tab:hover { color: var(--sct-ink); background: transparent; }
+#gtm-server-side-admin-settings .nav-tab:focus { outline: none; box-shadow: none; }
+#gtm-server-side-admin-settings .nav-tab:focus-visible { outline: 2px solid var(--sct-focus); outline-offset: 2px; }
+
+#gtm-server-side-admin-settings .nav-tab-active,
+#gtm-server-side-admin-settings .nav-tab-active:hover,
+#gtm-server-side-admin-settings .nav-tab-active:focus {
+	margin: 0;
+	background: var(--sct-canvas);
+	color: var(--sct-ink);
+	border-color: var(--sct-hairline);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+#gtm-server-side-admin-settings .tab-disabled,
+#gtm-server-side-admin-settings .tab-disabled:hover {
+	color: #a1a1a6;
+	background: transparent;
 	cursor: not-allowed;
 }
 
+/* The section titles inside the form stay hidden, as before. */
+#gtm-server-side-admin-settings form h2:not(.hndle) { display: none; }
+
+/* ---- Settings rows: label on the left, control and its sentence on the right ---- */
+#gtm-server-side-admin-settings .form-table {
+	width: 100%;
+	margin: 14px 0 0;
+	border-collapse: collapse;
+	border-spacing: 0;
+	clear: none;
+}
+
+#gtm-server-side-admin-settings .form-table tr + tr { border-top: 1px solid var(--sct-hairline); }
+
+#gtm-server-side-admin-settings .form-table th {
+	width: 280px;
+	padding: 18px 28px 18px 0;
+	vertical-align: top;
+	text-align: left;
+	font-family: inherit;
+	font-size: 13.5px;
+	font-weight: 600;
+	line-height: 1.4;
+	letter-spacing: -0.15px;
+	color: var(--sct-ink);
+}
+
+#gtm-server-side-admin-settings .form-table td {
+	margin: 0;
+	padding: 18px 0;
+	vertical-align: top;
+	font-family: inherit;
+	font-size: 12.5px;
+	font-weight: 400;
+	line-height: 1.55;
+	letter-spacing: -0.05px;
+	color: var(--sct-ink-muted);
+}
+
+/* The row's label lines up with the middle of a text field. */
+#gtm-server-side-admin-settings .form-table tr:has(> td > input[type="text"]) > th { padding-top: 29px; }
+
+/* A tick box or option dot with its sentence beside it. */
+#gtm-server-side-admin-settings .form-table td:has(> input[type="checkbox"]),
+#gtm-server-side-admin-settings .form-table td:has(> input[type="radio"]) {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+}
+
+/* A text field with its sentence underneath. */
+#gtm-server-side-admin-settings .form-table td:has(> input[type="text"]) {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 8px;
+}
+
+#gtm-server-side-admin-settings .form-table td > br { display: none; }
+
+/* On a wide screen the sentence next to a control stops at a readable length. */
+#gtm-server-side-admin-settings .form-table td:has(> input),
+#gtm-server-side-admin-settings .gtm-server-side-gtm-exclude-roles { max-width: 880px; }
+
+/* ---- Text fields (site .inp): parchment, 12px corners ---- */
+#gtm-server-side-admin-settings input[type="text"] {
+	width: 100%;
+	max-width: 440px;
+	min-height: 0;
+	margin: 0;
+	padding: 11px 13px;
+	font-family: var(--sct-font);
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 1.4;
+	letter-spacing: -0.1px;
+	color: var(--sct-ink);
+	background: var(--sct-parchment);
+	border: 1px solid transparent;
+	border-radius: var(--sct-r-input);
+	outline: none;
+	box-shadow: none;
+	transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+#gtm-server-side-admin-settings input[type="text"]::placeholder { color: #86868b; }
+
+/* Focus = white field with a solid grey frame. No ring, no glow. */
+#gtm-server-side-admin-settings input[type="text"]:focus {
+	outline: none;
+	box-shadow: none;
+	background: #fff;
+	border-color: var(--sct-focus);
+	color: var(--sct-ink);
+}
+
+/* ---- Tick boxes (site .auth-check) and option dots ---- */
+#gtm-server-side-admin-settings input[type="checkbox"],
+#gtm-server-side-admin-settings input[type="radio"] {
+	appearance: none;
+	-webkit-appearance: none;
+	flex: none;
+	width: 18px;
+	height: 18px;
+	min-width: 18px;
+	margin: 0;
+	padding: 0;
+	border: 1px solid var(--sct-line-strong);
+	border-radius: 5px;
+	background: #fff;
+	box-shadow: none;
+	cursor: pointer;
+	vertical-align: middle;
+	transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+#gtm-server-side-admin-settings input[type="radio"] { border-radius: 50%; }
+
+#gtm-server-side-admin-settings input[type="checkbox"]:checked {
+	background: var(--sct-ink) var(--sct-check) center / 12px no-repeat;
+	border-color: var(--sct-ink);
+}
+
+#gtm-server-side-admin-settings input[type="radio"]:checked {
+	background: radial-gradient(circle, #fff 0 3.5px, var(--sct-ink) 4px);
+	border-color: var(--sct-ink);
+}
+
+#gtm-server-side-admin-settings input[type="checkbox"]::before,
+#gtm-server-side-admin-settings input[type="radio"]::before,
+#gtm-server-side-admin-settings input[type="checkbox"]:checked::before,
+#gtm-server-side-admin-settings input[type="radio"]:checked::before { content: none; }
+
+#gtm-server-side-admin-settings input[type="checkbox"]:hover:not(:checked):not(:disabled),
+#gtm-server-side-admin-settings input[type="radio"]:hover:not(:checked) { border-color: var(--sct-ink-muted); }
+
+#gtm-server-side-admin-settings input[type="checkbox"]:focus,
+#gtm-server-side-admin-settings input[type="radio"]:focus { outline: none; box-shadow: none; }
+#gtm-server-side-admin-settings input[type="checkbox"]:focus-visible,
+#gtm-server-side-admin-settings input[type="radio"]:focus-visible { outline: 2px solid var(--sct-focus); outline-offset: 2px; }
+
+#gtm-server-side-admin-settings input[type="checkbox"]:disabled {
+	background: var(--sct-parchment);
+	border-color: var(--sct-hairline);
+	cursor: not-allowed;
+	opacity: 1;
+}
+
+/* ---- Exclude GTM for user roles: the roles as a row of chips under the sentence ---- */
+#gtm-server-side-admin-settings .gtm-server-side-gtm-exclude-roles {
+	display: grid;
+	grid-template-columns: 18px minmax(0, 1fr);
+	column-gap: 12px;
+	align-items: start;
+}
+
+#gtm-server-side-admin-settings .js-gtm-server-side-gtm-exclude-roles-block {
+	grid-column: 2;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-top: 12px;
+}
+
+#gtm-server-side-admin-settings .js-gtm-server-side-gtm-exclude-roles-block br { display: none; }
+
+#gtm-server-side-admin-settings .js-gtm-server-side-gtm-exclude-roles-block label {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 12px 8px 10px;
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1.2;
+	color: var(--sct-ink);
+	background: var(--sct-parchment);
+	border: 1px solid transparent;
+	border-radius: var(--sct-r-input);
+	cursor: pointer;
+	transition: border-color 0.15s ease;
+}
+
+#gtm-server-side-admin-settings .js-gtm-server-side-gtm-exclude-roles-block label:hover { border-color: var(--sct-line-strong); }
+#gtm-server-side-admin-settings .js-gtm-server-side-gtm-exclude-roles-block label:has(input:checked) { background: #fff; border-color: var(--sct-ink); }
+
+#gtm-server-side-admin-settings .js-gtm-server-side-gtm-exclude-roles-message { grid-column: 2; }
+
+/* Placement "Disable": the roles row fades out, as before. */
 #gtm-server-side-admin-settings:has( #synapse_ct_placement-disable:checked ) .gtm-server-side-gtm-exclude-roles {
 	opacity: 0.4;
 	pointer-events: none;
+}
+
+/* ---- Validation messages (jQuery validate) ---- */
+#gtm-server-side-admin-settings label.error {
+	display: block;
+	padding: 0;
+	font-size: 12.5px;
+	font-weight: 600;
+	line-height: 1.4;
+	color: var(--sct-accent);
+}
+
+#gtm-server-side-admin-settings .js-gtm-server-side-gtm-exclude-roles-message label.error { margin-top: 10px; }
+
+#gtm-server-side-admin-settings input[type="text"].error,
+#gtm-server-side-admin-settings input[type="text"].error:focus {
+	background: #fff;
+	border-color: var(--sct-accent);
+	color: var(--sct-ink);
+}
+
+/* ---- Notices WordPress moves under the title (Settings saved, edge check) ---- */
+#gtm-server-side-admin-settings .notice {
+	position: relative;
+	margin: 0 0 18px;
+	padding: 12px 16px;
+	background: var(--sct-parchment);
+	border: 1px solid var(--sct-hairline);
+	border-radius: var(--sct-r-input);
+	box-shadow: none;
+	font-size: 13px;
+	line-height: 1.5;
+	color: var(--sct-ink-soft);
+}
+
+#gtm-server-side-admin-settings .notice.is-dismissible { padding-right: 44px; }
+
+#gtm-server-side-admin-settings .notice p {
+	margin: 0;
+	padding: 0;
+	font-size: 13px;
+	line-height: 1.5;
+}
+
+#gtm-server-side-admin-settings .notice p + p { margin-top: 6px; }
+#gtm-server-side-admin-settings .notice strong { font-weight: 600; color: var(--sct-ink); }
+
+#gtm-server-side-admin-settings .notice-success p:first-child strong {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+}
+
+#gtm-server-side-admin-settings .notice-success p:first-child strong::before {
+	content: "";
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	background: var(--sct-ink);
+}
+
+#gtm-server-side-admin-settings .notice-error {
+	background: rgba(196, 35, 43, 0.06);
+	border-color: rgba(196, 35, 43, 0.18);
+}
+
+#gtm-server-side-admin-settings .notice-error p:first-child strong { color: var(--sct-accent); }
+
+#gtm-server-side-admin-settings .notice code {
+	padding: 2px 6px;
+	font-size: 12px;
+	color: var(--sct-ink);
+	background: rgba(0, 0, 0, 0.06);
+	border-radius: 6px;
+}
+
+#gtm-server-side-admin-settings .notice a {
+	color: var(--sct-ink);
+	font-weight: 600;
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+#gtm-server-side-admin-settings .notice a:hover { color: var(--sct-ink-soft); }
+#gtm-server-side-admin-settings .notice a:focus { outline: none; box-shadow: none; }
+#gtm-server-side-admin-settings .notice a:focus-visible { outline: 2px solid var(--sct-focus); outline-offset: 2px; }
+
+#gtm-server-side-admin-settings .notice-dismiss {
+	top: 50%;
+	right: 8px;
+	transform: translateY(-50%);
+	padding: 6px;
+	color: var(--sct-ink-muted);
+	border-radius: 8px;
+}
+
+#gtm-server-side-admin-settings .notice-dismiss:hover,
+#gtm-server-side-admin-settings .notice-dismiss:focus { color: var(--sct-ink); }
+#gtm-server-side-admin-settings .notice-dismiss:hover::before,
+#gtm-server-side-admin-settings .notice-dismiss:focus::before { color: var(--sct-ink); }
+#gtm-server-side-admin-settings .notice-dismiss:focus { outline: none; box-shadow: none; }
+#gtm-server-side-admin-settings .notice-dismiss:focus-visible { outline: 2px solid var(--sct-focus); outline-offset: 0; }
+
+/* ---- Save bar: always reachable at the bottom of the card ---- */
+#gtm-server-side-admin-settings p.submit {
+	position: sticky;
+	bottom: 0;
+	z-index: 30;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	max-width: none;
+	margin: 6px -24px 0;
+	padding: 14px 24px;
+	background: rgba(255, 255, 255, 0.94);
+	-webkit-backdrop-filter: saturate(180%) blur(12px);
+	backdrop-filter: saturate(180%) blur(12px);
+	border-top: 1px solid var(--sct-hairline);
+	border-radius: 0 0 var(--sct-r-card) var(--sct-r-card);
+}
+
+/* Primary save: site red, 12px corners like every other Synapse button. */
+.wp-core-ui #gtm-server-side-admin-settings .button-primary,
+.wp-core-ui #gtm-server-side-admin-settings .button-primary:hover,
+.wp-core-ui #gtm-server-side-admin-settings .button-primary:focus,
+.wp-core-ui #gtm-server-side-admin-settings .button-primary:active {
+	min-height: 42px;
+	margin: 0;
+	padding: 0 24px;
+	font-family: var(--sct-font);
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 1;
+	letter-spacing: -0.1px;
+	color: #fff;
+	background: var(--sct-accent);
+	border: 1px solid var(--sct-accent);
+	border-radius: var(--sct-r-input);
+	box-shadow: none;
+	text-shadow: none;
+	transform: none;
+	cursor: pointer;
+	transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.12s ease;
+}
+
+.wp-core-ui #gtm-server-side-admin-settings .button-primary:hover { background: var(--sct-accent-press); border-color: var(--sct-accent-press); }
+.wp-core-ui #gtm-server-side-admin-settings .button-primary:active { transform: scale(0.97); }
+.wp-core-ui #gtm-server-side-admin-settings .button-primary:focus-visible { outline: 2px solid var(--sct-accent); outline-offset: 2px; }
+
+/* ---- Tablet and phone: WordPress stacks the rows at 782px, so do we ---- */
+@media screen and (max-width: 782px) {
+	#gtm-server-side-admin-settings {
+		margin: 12px 10px 0 0;
+		padding: 16px 16px 0;
+	}
+
+	#gtm-server-side-admin-settings > h2 { margin-bottom: 16px; padding-bottom: 16px; }
+
+	#gtm-server-side-admin-settings .nav-tab-wrapper { width: auto; margin: 0; }
+	#gtm-server-side-admin-settings .nav-tab { flex: 1; padding: 0 12px; }
+
+	#gtm-server-side-admin-settings .form-table th,
+	#gtm-server-side-admin-settings .form-table td {
+		display: block;
+		width: auto;
+	}
+
+	#gtm-server-side-admin-settings .form-table th,
+	#gtm-server-side-admin-settings .form-table tr:has(> td > input[type="text"]) > th { padding: 16px 0 10px; }
+
+	#gtm-server-side-admin-settings .form-table td { padding: 0 0 16px; }
+
+	#gtm-server-side-admin-settings .form-table td:has(> input[type="checkbox"]),
+	#gtm-server-side-admin-settings .form-table td:has(> input[type="radio"]) { display: flex; }
+
+	#gtm-server-side-admin-settings .form-table td:has(> input[type="text"]) { display: flex; }
+
+	/* 16px keeps iOS from zooming into the field. */
+	#gtm-server-side-admin-settings input[type="text"] { max-width: none; font-size: 16px; }
+
+	#gtm-server-side-admin-settings input[type="checkbox"],
+	#gtm-server-side-admin-settings input[type="radio"] {
+		width: 20px;
+		height: 20px;
+		min-width: 20px;
+	}
+
+	#gtm-server-side-admin-settings .gtm-server-side-gtm-exclude-roles { grid-template-columns: 20px minmax(0, 1fr); }
+	#gtm-server-side-admin-settings .js-gtm-server-side-gtm-exclude-roles-block,
+	#gtm-server-side-admin-settings .js-gtm-server-side-gtm-exclude-roles-message { grid-column: 1 / -1; }
+
+	#gtm-server-side-admin-settings p.submit {
+		margin: 0 -16px;
+		padding: 12px 16px;
+	}
+
+	.wp-core-ui #gtm-server-side-admin-settings p.submit .button-primary { width: 100%; justify-content: center; }
 }
